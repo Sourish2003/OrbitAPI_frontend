@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,6 +39,18 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --navbar-height: 64px;
+    --header-height: 3.5rem;
+    --first-color: hsl(28, 88%, 62%);
+    --title-color: hsl(0, 0%, 95%);
+    --text-color: hsl(0, 0%, 75%);
+    --body-font: "Montserrat", sans-serif;
+    --second-font: "Dancing Script", cursive;
+    --h2-font-size: 1.25rem;
+    --small-font-size: 0.813rem;
+    --font-semi-bold: 600;
+    --z-tooltip: 10;
+    --z-fixed: 100;
   }
 
   .dark {
@@ -77,9 +91,26 @@
 
 @layer base {
   * {
+    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+body {
+  padding-top: var(--navbar-height, 64px);
+  color: var(--text-color);
+  font-family: var(--body-font);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
 }
