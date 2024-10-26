@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IoClose, IoMenu } from "react-icons/io5";
 import GithubIcon from "../assets/github.jsx";
 import { useAuth0 } from "@auth0/auth0-react";
 import { fetchGithubAccessToken } from "../github_auth/github.jsx";
 
 const Navbar = ({ setRepos }) => {
-    const { loginWithRedirect, logout, user, isAuthenticated, isLoading } =
-      useAuth0();
+  const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
+  const navigate = useNavigate();
+  const [showMenu, setShowMenu] = useState(false);
+
   useEffect(() => {
     const updateNavbarHeight = () => {
       const navbar = document.querySelector("nav");
@@ -30,13 +32,12 @@ const Navbar = ({ setRepos }) => {
   }, []);
 
   useEffect(() => {
-    // Fetch GitHub access token after successful login
+    // Fetch GitHub access token and redirect after successful login
     if (isAuthenticated && user) {
       setGithubAccessToken(user);
+      navigate('/dashboard'); // Add navigation to dashboard
     }
-  }, [isAuthenticated, user]);
-
-  const [showMenu, setShowMenu] = useState(false);
+  }, [isAuthenticated, user, navigate]);
 
   if (isLoading) {
     return <div>Loading ...</div>;
@@ -60,6 +61,14 @@ const Navbar = ({ setRepos }) => {
     } catch (error) {
       console.error("Error setting access token:", error);
     }
+  };
+
+  const handleLogin = () => {
+    loginWithRedirect({
+      connection: "github",
+      scope: "read:user repo",
+      appState: { returnTo: "/dashboard" }, // Add return URL
+    });
   };
 
   return (
@@ -117,6 +126,19 @@ const Navbar = ({ setRepos }) => {
               </NavLink>
             </li>
 
+            {/* Add Dashboard link when authenticated */}
+            {isAuthenticated && (
+              <li>
+                <NavLink
+                  to="/dashboard"
+                  className="font-semibold hover:text-blue-500 transition-colors duration-400"
+                  onClick={closeMenuOnMobile}
+                >
+                  Dashboard
+                </NavLink>
+              </li>
+            )}
+
             <li className="flex flex-col lg:flex-row items-center gap-4">
               {isAuthenticated ? (
                 <>
@@ -145,12 +167,7 @@ const Navbar = ({ setRepos }) => {
                 </>
               ) : (
                 <button
-                  onClick={() => {
-                    loginWithRedirect({
-                      connection: "github",
-                      scope: "read:user repo", // Request GitHub access
-                    });
-                  }}
+                  onClick={handleLogin}
                   className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition-colors duration-300"
                 >
                   Log In
@@ -176,7 +193,7 @@ const Navbar = ({ setRepos }) => {
 
         {/* GitHub Icon aligned to the right with padding */}
         <a
-          href="https://github.com/Sourish2003/react_app"
+          href="https://github.com/Sourish2003/OrbitAPI_frontend"
           target="_blank"
           rel="noopener noreferrer"
           className="ml-auto mr-4 hover:opacity-80 transition-opacity duration-300"

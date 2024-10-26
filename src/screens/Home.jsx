@@ -1,6 +1,5 @@
 import "../App";
-import React, { useState, useEffect } from "react";
-import { fetchGithubAccessToken } from "../github_auth/github.jsx"; // Make sure this import is correct
+import React, { useState } from "react";
 import "../App.css";
 
 function Home() {

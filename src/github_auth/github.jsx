@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
 
 // import Repositories from 'github_auth/Repositories.jsx';
 
@@ -10,6 +9,8 @@ export const fetchGithubAccessToken = async (user) => {
   try {
     const user_id = user["sub"].split("|")[1];
     console.log("user: ", user_id);
+    console.log("Management token: ", management_token);
+    
 
     const response = await axios.get(
       "https://dev-hrmgixm7udp8vimi.us.auth0.com/api/v2/users",
@@ -32,6 +33,7 @@ export const fetchGithubAccessToken = async (user) => {
         (identity) =>
           identity.provider === "github" && identity.user_id === user_id
       );
+      console.log(githubIdentity)
 
       if (githubIdentity) {
         const githubToken = githubIdentity.access_token;
